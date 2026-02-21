@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tyut.mapper.UserMapper">
+
+    <!-- 结果映射：医生详细信息 -->
+    <resultMap id="DoctorDetailResultMap" type="com.tyut.vo.DoctorDetailVO">
+        <!-- sys_user 字段 -->
+        <result property="userId" column="userId"/>
+        <result property="username" column="username"/>
+        <result property="phone" column="phone"/>
+        <result property="avatarUrl" column="avatarUrl"/>
+        <result property="status" column="status"/>
+
+        <!-- doctor_profile 字段 -->
+        <result property="doctorId" column="doctorId"/>
+        <result property="name" column="name"/>
+        <result property="specialty" column="specialty"/>
+        <result property="title" column="title"/>
+        <result property="introduction" column="introduction"/>
+        <result property="gender" column="gender"/>
+
+        <!-- department 字段 -->
+        <result property="departmentId" column="departmentId"/>
+        <result property="departmentName" column="departmentName"/>
+    </resultMap>
+    <resultMap id="ResidentDetailResultMap" type="com.tyut.vo.ResidentDetailVO">
+        <result property="userId" column="userId"/>
+        <result property="username" column="username"/>
+        <result property="phone" column="phone"/>
+        <result property="avatarUrl" column="avatarUrl"/>
+        <result property="status" column="status"/>
+        <result property="residentId" column="residentId"/>
+        <result property="name" column="name"/>
+        <result property="gender" column="gender"/>
+        <result property="age" column="age"/>
+        <result property="contact" column="contact"/>
+        <result property="address" column="address"/>
+    </resultMap>
+
+    <!-- 根据用户ID查询医生详细信息 -->
+    <select id="selectDoctorById" resultMap="DoctorDetailResultMap">
+        SELECT
+            su.id as userId,
+            su.username,
+            su.phone,
+            su.avatar_url as avatarUrl,
+            su.status,
+            dp.id as doctorId,
+            dp.name,
+            dp.specialty,
+            dp.title,
+            dp.introduction,
+            dp.gender,
+            d.id as departmentId,
+            d.name as departmentName
+        FROM sys_user su
+        LEFT JOIN doctor_profile dp ON su.id = dp.user_id
+        LEFT JOIN department d ON dp.department_id = d.id
+        WHERE su.id = #{id}
+        AND su.role_type = 1
+        AND su.is_deleted = 0
+        And su.status = 1
+    </select>
+    <select id="selectResidentById" resultMap="ResidentDetailResultMap">
+        SELECT su.id as userId,
+               su.username,
+               su.phone,
+               su.avatar_url as avatarUrl,
+               su.status,
+               rp.id         as residentId,
+               rp.name,
+               rp.gender,
+               rp.age,
+               rp.contact,
+               rp.address
+        FROM sys_user AS su
+                 LEFT JOIN resident_profile AS rp
+                           ON su.id = rp.user_id
+        where su.id=#{id}
+        And su.role_type = 2
+        And su.is_deleted = 0
+        And su.status = 1
+    </select>
+
+</mapper>

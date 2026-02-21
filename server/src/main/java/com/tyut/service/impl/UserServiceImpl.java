@@ -1,0 +1,293 @@
+package com.tyut.service.impl;
+
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.tyut.annotation.DataBackUp;
+import com.tyut.constant.AccountConstant;
+import com.tyut.constant.LoginConstant;
+import com.tyut.constant.ModuleConstant;
+import com.tyut.context.BaseContext;
+import com.tyut.dto.LoginDTO;
+import com.tyut.dto.ResidentRegisterDTO;
+import com.tyut.dto.UpdateProfileDTO;
+import com.tyut.entity.OperationLog;
+import com.tyut.entity.ResidentProfile;
+import com.tyut.entity.SysUser;
+import com.tyut.exception.BaseException;
+import com.tyut.mapper.OperationLogMapper;
+import com.tyut.mapper.ResidentMapper;
+import com.tyut.mapper.UserMapper;
+import com.tyut.properties.JwtProperties;
+import com.tyut.service.UserService;
+import com.tyut.utils.CryptoUtil;
+import com.tyut.utils.JwtUtil;
+import com.tyut.vo.AdminDetailVO;
+import com.tyut.vo.DoctorDetailVO;
+import com.tyut.vo.LoginUserVO;
+import com.tyut.vo.ResidentDetailVO;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+@Service
+public class UserServiceImpl implements UserService {
+    @Autowired
+    private UserMapper userMapper;
+    @Autowired
+    private CryptoUtil cryptoUtil;
+    @Autowired
+    private JwtProperties jwtProperties;
+    @Autowired
+    private ResidentMapper residentMapper;
+    //注册时BaseContext中没有存储用户ID和Role,因此不能与AOP绑定
+    @Autowired
+    private OperationLogMapper operationLogMapper;
+
+    /**
+     * 用户登录
+     *
+     * @param loginDTO
+     * @return
+     */
+
+    @Override
+    public LoginUserVO login(LoginDTO loginDTO) {
+        SysUser user = null;
+        Integer type = loginDTO.getLoginType();
+        if (type == LoginConstant.TYPE_USERNAME) {
+            user = userMapper.selectByUsername(loginDTO.getAccount());
+        } else if (type == LoginConstant.TYPE_PHONE) {
+            user = userMapper.selectByPhone(loginDTO.getAccount());
+        } else if (type == LoginConstant.TYPE_ID_CARD) {
+            user = userMapper.selectByIdCard(loginDTO.getAccount());
+        }
+        if (user == null || user.getIsDeleted() == AccountConstant.IS_DELETE) {
+            throw new BaseException("用户不存在");
+        }
+        if (user.getStatus() == AccountConstant.STATUS_DISABLE) {
+            throw new BaseException("用户已禁用");
+        }
+
+        // 使用MD5验证密码
+        if (!cryptoUtil.matches(loginDTO.getPassword(), user.getPassword())) {
+            throw new BaseException("密码错误");
+        }
+
+        // 生成 JWT
+        String token = JwtUtil.generateToken(user.getRoleType(), user.getId(), jwtProperties.getSecretKey(), jwtProperties.getTtl());
+
+        // 封装返回数据
+        return LoginUserVO.builder().id(user.getId())
+                .username(user.getUsername())
+                .avatarUrl(user.getAvatarUrl())
+                .roleType(user.getRoleType())
+                .token(token)
+                .build();
+    }
+
+    /**
+     * 根据ID获取管理员信息
+     *
+     * @param id
+     * @return
+     */
+
+    @Override
+    public AdminDetailVO getAdminById(Long id) {
+        SysUser user = userMapper.selectById(id);
+        AdminDetailVO adminDetailVO = new AdminDetailVO();
+        BeanUtils.copyProperties(user, adminDetailVO);
+        return adminDetailVO;
+    }
+
+    /**
+     * 根据ID获取医生信息
+     *
+     * @param id
+     * @return
+     */
+
+    @Override
+    public DoctorDetailVO getDoctorById(Long id) {
+        return userMapper.selectDoctorById(id);
+    }
+
+    /**
+     * 根据ID获取居民信息
+     *
+     * @param id
+     * @return
+     */
+
+    @Override
+    public ResidentDetailVO getResidentById(Long id) {
+        ResidentDetailVO resident = userMapper.selectResidentById(id);
+        if (resident == null) throw new BaseException("当前账号不可用！");
+        return resident;
+    }
+
+    /**
+     * 社区居民注册
+     *
+     * @param residentRegisterDTO
+     */
+    @Transactional
+    @Override
+    public void registerResident(ResidentRegisterDTO residentRegisterDTO) {
+        SysUser sysUser = SysUser.builder()
+                .username(residentRegisterDTO.getUsername())
+                .phone(residentRegisterDTO.getPhone())
+                .idCard(residentRegisterDTO.getIdCard())
+                .password(cryptoUtil.encodePassword(residentRegisterDTO.getPassword()))
+                .avatarUrl(residentRegisterDTO.getAvatarUrl())
+                .status(AccountConstant.STATUS_NORMAL)
+                .isDeleted(AccountConstant.NOT_DELETE)
+                .createTime(LocalDateTime.now())
+                .updateTime(LocalDateTime.now())
+                .roleType(AccountConstant.ROLE_RESIDENT)
+                .build();
+        userMapper.insert(sysUser);
+        ResidentProfile residentProfile = ResidentProfile.builder()
+                .userId(sysUser.getId())
+                .name(residentRegisterDTO.getName())
+                .gender(residentRegisterDTO.getGender())
+                .age(residentRegisterDTO.getAge())
+                .contact(residentRegisterDTO.getContact())
+                .address(residentRegisterDTO.getAddress())
+                .is_deleted(AccountConstant.NOT_DELETE)
+                .createTime(LocalDateTime.now())
+                .build();
+        residentMapper.insert(residentProfile);
+        OperationLog operationLog = OperationLog.builder()
+                .userId(sysUser.getId())
+                .roleType(AccountConstant.ROLE_RESIDENT)
+                .methodName("com.tyut.service.impl.UserServiceImpl.registerResident")
+                .moduleName("用户注册")
+                .createTime(LocalDateTime.now())
+                .build();
+        operationLogMapper.insert(operationLog);
+    }
+
+    /**
+     * 更新管理员
+     *
+     * @param updateProfileDTO
+     */
+    @DataBackUp(module = ModuleConstant.USER)
+    @Override
+    public void updateAdmin(UpdateProfileDTO updateProfileDTO) {
+        SysUser sysUser = new SysUser();
+        BeanUtils.copyProperties(updateProfileDTO, sysUser);
+        userMapper.updateById(sysUser);
+    }
+
+    /**
+     * 更新医生
+     *
+     * @param updateProfileDTO
+     */
+    @DataBackUp(module = ModuleConstant.USER)
+    @Override
+    public void updateDoctor(UpdateProfileDTO updateProfileDTO) {
+        SysUser sysUser = new SysUser();
+        BeanUtils.copyProperties(updateProfileDTO, sysUser);
+        userMapper.updateById(sysUser);
+    }
+
+    /**
+     * 居民信息更新
+     *
+     * @param updateProfileDTO
+     */
+
+    @DataBackUp(module = ModuleConstant.USER)
+    @Transactional
+    @Override
+    public void updateResident(UpdateProfileDTO updateProfileDTO) {
+        if (updateProfileDTO.judgeUser()) {
+            SysUser sysUser = new SysUser();
+            BeanUtils.copyProperties(updateProfileDTO, sysUser);
+            System.out.println(sysUser);
+            userMapper.updateById(sysUser);
+        }
+        if (updateProfileDTO.judgeResident()) {
+            LambdaUpdateWrapper<ResidentProfile> wrapper = new LambdaUpdateWrapper<>();
+            wrapper.eq(ResidentProfile::getUserId, updateProfileDTO.getId());
+            // 使用条件判断只设置非null字段
+            Optional.ofNullable(updateProfileDTO.getName()).ifPresent(name -> wrapper.set(ResidentProfile::getName, name));
+            Optional.ofNullable(updateProfileDTO.getGender()).ifPresent(gender -> wrapper.set(ResidentProfile::getGender, gender));
+            Optional.ofNullable(updateProfileDTO.getAge()).ifPresent(age -> wrapper.set(ResidentProfile::getAge, age));
+            Optional.ofNullable(updateProfileDTO.getContact()).ifPresent(contact -> wrapper.set(ResidentProfile::getContact, contact));
+            Optional.ofNullable(updateProfileDTO.getAddress()).ifPresent(address -> wrapper.set(ResidentProfile::getAddress, address));
+            residentMapper.update(null, wrapper);
+        }
+    }
+
+    /**
+     * 更新密码
+     *
+     * @param oldPassword
+     * @param newPassword
+     */
+
+    @DataBackUp(module = ModuleConstant.USER)
+    @Transactional
+    @Override
+    public void updatePassword(String oldPassword, String newPassword) {
+        Long id = BaseContext.get().getId();
+        SysUser sysUser = userMapper.selectById(id);
+        if (!cryptoUtil.matches(oldPassword, sysUser.getPassword())) {
+            throw new BaseException("密码错误");
+        }
+        sysUser.setPassword(cryptoUtil.encodePassword(newPassword));
+        userMapper.updateById(sysUser);
+    }
+
+    /**
+     * 启用禁用
+     *
+     * @param id
+     * @param status
+     */
+    @DataBackUp(module = ModuleConstant.USER)
+    @Override
+    public void updateStatus(Long id, Integer status) {
+        SysUser sysUser = SysUser.builder()
+                .id(id)
+                .status(status)
+                .build();
+        userMapper.updateById(sysUser);
+    }
+
+    /**
+     * 删除用户
+     *
+     * @param id
+     */
+    @DataBackUp(module = ModuleConstant.USER)
+    @Override
+    public void deleteUser(Long id) {
+        LambdaUpdateWrapper<SysUser> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(SysUser::getId, id)
+                .set(SysUser::getIsDeleted, AccountConstant.IS_DELETE);
+        userMapper.update(null, wrapper);
+    }
+
+    /**
+     * 撤销删除
+     *
+     * @param id
+     */
+    @Override
+    public void revertUser(Long id) {
+        LambdaUpdateWrapper<SysUser> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(SysUser::getId, id)
+                .set(SysUser::getIsDeleted, AccountConstant.NOT_DELETE);
+        userMapper.update(null, wrapper);
+    }
+
+}

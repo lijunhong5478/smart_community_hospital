@@ -1,0 +1,48 @@
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  profiles:
+    active: dev
+  datasource:
+    driver-class-name: ${tyut.datasource.driver-class-name}
+    url: jdbc:mysql://${tyut.datasource.host}:${tyut.datasource.port}/${tyut.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+    username: ${tyut.datasource.username}
+    password: ${tyut.datasource.password}
+  redis:
+    host: ${tyut.redis.host}
+    port: ${tyut.redis.port}
+server:
+  port: ${tyut.server.port}
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.commons.JakartaCommonsLoggingImpl
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath*:mapper/*.xml
+  type-aliases-package: com.tyut.entity
+  global-config:
+    db-config:
+      id-type: auto
+tyut:
+  jwt:
+    # 设置jwt签名加密时使用的秘钥
+    secret-key: tyut
+    # 设置jwt过期时间
+    ttl: 7200000
+    # 设置前端传递过来的令牌名称
+    admin-token-name: admin-token
+    resident-token-name: resident-token
+    doctor-token-name: doctor-token
+  crypto:
+    aes-key: tyut-health-system-2026
+knife4j:
+  enable: true
+  setting:
+    language: zh-CN
+    enableSwaggerModels: true
+    enableDocumentManage: true
+    swaggerModelName: 实体类列表
+springfox:
+  documentation:
+    swagger-ui:
+      enabled: true

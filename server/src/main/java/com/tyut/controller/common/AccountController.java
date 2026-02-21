@@ -1,0 +1,44 @@
+package com.tyut.controller.common;
+
+import com.tyut.dto.LoginDTO;
+import com.tyut.result.Result;
+import com.tyut.service.UserService;
+import com.tyut.vo.LoginUserVO;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/common/user")
+@Api(tags = "全局用户接口")
+public class AccountController {
+    @Autowired
+    private UserService userService;
+
+    /**
+     * 用户登录
+     * 所有用户必须登录
+     */
+    @PostMapping("/login")
+
+    public Result<LoginUserVO> login(@RequestBody LoginDTO dto) {
+        LoginUserVO vo = userService.login(dto);
+        return Result.success(vo);
+    }
+
+    /**
+     * 所有用户都有权修改密码
+     * @param oldPassword
+     * @param newPassword
+     * @return
+     */
+    @ApiOperation("修改密码")
+    @PutMapping("/password")
+    public Result<String> updatePassword(String oldPassword, String newPassword) {
+        userService.updatePassword(oldPassword, newPassword);
+        return Result.success();
+    }
+
+}
