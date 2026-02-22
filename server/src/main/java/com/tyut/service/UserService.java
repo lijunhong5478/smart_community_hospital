@@ -1,8 +1,6 @@
 package com.tyut.service;
 
-import com.tyut.dto.LoginDTO;
-import com.tyut.dto.ResidentRegisterDTO;
-import com.tyut.dto.UpdateProfileDTO;
+import com.tyut.dto.*;
 import com.tyut.vo.AdminDetailVO;
 import com.tyut.vo.DoctorDetailVO;
 import com.tyut.vo.LoginUserVO;

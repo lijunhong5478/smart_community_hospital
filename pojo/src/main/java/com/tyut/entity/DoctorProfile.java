@@ -8,16 +8,18 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResidentProfile {
+@Builder
+public class DoctorProfile {
     private Long id;
     private Long userId;
     private String name;
+    private String specialty;
+    private Integer title;
+    private String introduction;
+    private LocalDateTime createTime;
+    private Integer departmentId;
     private Integer gender;
     private Integer age;
-    private String contact;
-    private String address;
-    private LocalDateTime createTime;
 }

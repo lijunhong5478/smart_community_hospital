@@ -7,16 +7,10 @@ import com.tyut.constant.AccountConstant;
 import com.tyut.constant.LoginConstant;
 import com.tyut.constant.ModuleConstant;
 import com.tyut.context.BaseContext;
-import com.tyut.dto.LoginDTO;
-import com.tyut.dto.ResidentRegisterDTO;
-import com.tyut.dto.UpdateProfileDTO;
-import com.tyut.entity.OperationLog;
-import com.tyut.entity.ResidentProfile;
-import com.tyut.entity.SysUser;
+import com.tyut.dto.*;
+import com.tyut.entity.*;
 import com.tyut.exception.BaseException;
-import com.tyut.mapper.OperationLogMapper;
-import com.tyut.mapper.ResidentMapper;
-import com.tyut.mapper.UserMapper;
+import com.tyut.mapper.*;
 import com.tyut.properties.JwtProperties;
 import com.tyut.service.UserService;
 import com.tyut.utils.CryptoUtil;
@@ -46,7 +40,11 @@ public class UserServiceImpl implements UserService {
     //注册时BaseContext中没有存储用户ID和Role,因此不能与AOP绑定
     @Autowired
     private OperationLogMapper operationLogMapper;
-
+    //添加医生需要引入的mapper层
+    @Autowired
+    private DoctorProfileMapper doctorProfileMapper;
+    @Autowired
+    private DoctorScheduleMapper doctorScheduleMapper;
     /**
      * 用户登录
      *
@@ -158,7 +156,6 @@ public class UserServiceImpl implements UserService {
                 .age(residentRegisterDTO.getAge())
                 .contact(residentRegisterDTO.getContact())
                 .address(residentRegisterDTO.getAddress())
-                .is_deleted(AccountConstant.NOT_DELETE)
                 .createTime(LocalDateTime.now())
                 .build();
         residentMapper.insert(residentProfile);
@@ -289,5 +286,4 @@ public class UserServiceImpl implements UserService {
                 .set(SysUser::getIsDeleted, AccountConstant.NOT_DELETE);
         userMapper.update(null, wrapper);
     }
-
 }

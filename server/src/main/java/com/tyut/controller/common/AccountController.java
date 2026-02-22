@@ -22,7 +22,7 @@ public class AccountController {
      * 所有用户必须登录
      */
     @PostMapping("/login")
-
+    @ApiOperation("用户登录")
     public Result<LoginUserVO> login(@RequestBody LoginDTO dto) {
         LoginUserVO vo = userService.login(dto);
         return Result.success(vo);

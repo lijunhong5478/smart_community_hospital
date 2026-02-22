@@ -30,7 +30,7 @@ public class SwaggerConfiguration {
                 .title("社区健康管理系统API文档")
                 .description("社区健康管理系统后端接口文档")
                 .version("1.0")
-                .contact(new Contact("开发团队", "", ""))
+                .contact(new Contact("tyut_lijunhong", "", ""))
                 .build();
     }
 }

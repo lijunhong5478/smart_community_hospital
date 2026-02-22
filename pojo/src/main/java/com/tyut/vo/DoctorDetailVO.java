@@ -21,8 +21,12 @@ public class DoctorDetailVO {
     private Integer title;
     private String introduction;
     private Integer gender;
+    private Integer age;
 
     // ===== department =====
     private Long departmentId;
     private String departmentName;
+
+    // ===== doctor_schedule =====
+    private List<DoctorSchedule> doctorSchedules;
 }

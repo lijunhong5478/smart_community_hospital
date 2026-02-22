@@ -1,5 +1,7 @@
 package com.tyut.controller.admin;
 
+import com.tyut.dto.AddDoctorDTO;
+import com.tyut.dto.DoctorScheduleUpdateDTO;
 import com.tyut.dto.UpdateProfileDTO;
 import com.tyut.result.Result;
 import com.tyut.service.UserService;
@@ -12,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController("adminAccountController")
 @RequestMapping("/admin/account")
-@Api(tags = "管理员账户接口")
+@Api(tags = "管理员账户管理接口")
 public class AccountController {
     @Autowired
     private UserService userService;

@@ -18,10 +18,22 @@
         <result property="title" column="title"/>
         <result property="introduction" column="introduction"/>
         <result property="gender" column="gender"/>
+        <result property="age" column="age"/>
 
         <!-- department 字段 -->
         <result property="departmentId" column="departmentId"/>
         <result property="departmentName" column="departmentName"/>
+        <!--schedule字段-->
+        <collection property="doctorSchedules" ofType="com.tyut.entity.DoctorSchedule">
+            <result property="id" column="scheduleId"/>
+            <result property="doctorId" column="scDoctorId"/>
+            <result property="weekDay" column="weekDay"/>
+            <result property="timeSlot" column="timeSlot"/>
+            <result property="maxNumber" column="maxNumber"/>
+            <result property="currentNumber" column="currentNumber"/>
+            <result property="status" column="docStatus"/>
+            <result property="createTime" column="createTime"/>
+        </collection>
     </resultMap>
     <resultMap id="ResidentDetailResultMap" type="com.tyut.vo.ResidentDetailVO">
         <result property="userId" column="userId"/>
@@ -51,15 +63,24 @@
             dp.title,
             dp.introduction,
             dp.gender,
+            dp.age,
             d.id as departmentId,
-            d.name as departmentName
+            d.name as departmentName,
+            dc.id as scheduleId,
+            su.id as scDoctorId,
+            dc.week_day as weekDay,
+            dc.time_slot as timeSlot,
+            dc.max_number as maxNumber,
+            dc.current_number as currentNumber,
+            dc.status as docStatus,
+            dc.create_time as createTime
         FROM sys_user su
         LEFT JOIN doctor_profile dp ON su.id = dp.user_id
         LEFT JOIN department d ON dp.department_id = d.id
+        LEFT JOIN doctor_schedule dc ON su.id = dc.doctor_id
         WHERE su.id = #{id}
         AND su.role_type = 1
         AND su.is_deleted = 0
-        And su.status = 1
     </select>
     <select id="selectResidentById" resultMap="ResidentDetailResultMap">
         SELECT su.id as userId,
