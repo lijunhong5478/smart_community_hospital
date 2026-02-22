@@ -4,34 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84416b3d-c963-4e6e-b766-645b3dfc8eec" name="Changes" comment="1.完成了系统初始化配置 2.完成了用户管理模块，为不同角色的用户赋予了不同的操作权限 3.完成了日志记录，引入逻辑删除字段，便于系统的备份与恢复">
-      <change afterPath="$PROJECT_DIR$/pojo/src/main/java/com/tyut/dto/DoctorScheduleUpdateDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pojo/src/main/java/com/tyut/dto/OperationLogQueryDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pojo/src/main/java/com/tyut/entity/DoctorProfile.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/admin/DoctorController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/admin/OperationLogController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/mapper/DoctorProfileMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/mapper/DoctorScheduleMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/DoctorService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/OperationLogService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/DoctorServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/OperationLogServiceImpl.java" afterDir="false" />
+    <list default="true" id="84416b3d-c963-4e6e-b766-645b3dfc8eec" name="Changes" comment="完成了管理员新增医生以及医生排班的功能。确保医生按ID查询后能够得到排班记录">
+      <change afterPath="$PROJECT_DIR$/pojo/src/main/java/com/tyut/dto/DoctorQueryDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/resident/DoctorController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/resources/mapper/DoctorProfileMapper.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/e7d61a73-bbd4-480f-9dca-39d6ca7bf947.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/e7d61a73-bbd4-480f-9dca-39d6ca7bf947.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/tyut/config/SwaggerConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/tyut/config/SwaggerConfiguration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/tyut/result/PageResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/tyut/result/PageResult.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pojo/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pojo/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pojo/src/main/java/com/tyut/dto/AddDoctorDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/pojo/src/main/java/com/tyut/dto/AddDoctorDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pojo/src/main/java/com/tyut/entity/DoctorSchedule.java" beforeDir="false" afterPath="$PROJECT_DIR$/pojo/src/main/java/com/tyut/entity/DoctorSchedule.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pojo/src/main/java/com/tyut/entity/ResidentProfile.java" beforeDir="false" afterPath="$PROJECT_DIR$/pojo/src/main/java/com/tyut/entity/ResidentProfile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pojo/src/main/java/com/tyut/vo/DoctorDetailVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/pojo/src/main/java/com/tyut/vo/DoctorDetailVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/admin/AccountController.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/admin/AccountController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/common/AccountController.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/common/AccountController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/doctor/AccountController.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/doctor/AccountController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/UserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/resources/mapper/UserMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/resources/mapper/UserMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/admin/DoctorController.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/admin/DoctorController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/mapper/DoctorProfileMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/mapper/DoctorProfileMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/DoctorService.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/DoctorService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/DoctorServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/DoctorServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -226,7 +208,8 @@
       <workItem from="1771669228205" duration="3670000" />
       <workItem from="1771672920101" duration="2594000" />
       <workItem from="1771675547569" duration="9000" />
-      <workItem from="1771724926746" duration="16481000" />
+      <workItem from="1771724926746" duration="16561000" />
+      <workItem from="1771756282679" duration="6320000" />
     </task>
     <task id="LOCAL-00001" summary="1.完成了系统初始化配置 2.完成了用户管理模块，为不同角色的用户赋予了不同的操作权限 3.完成了日志记录，引入逻辑删除字段，便于系统的备份与恢复">
       <option name="closed" value="true" />
@@ -252,7 +235,15 @@
       <option name="project" value="LOCAL" />
       <updated>1771674920866</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="完成了管理员新增医生以及医生排班的功能。确保医生按ID查询后能够得到排班记录">
+      <option name="closed" value="true" />
+      <created>1771754833538</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1771754833538</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -283,6 +274,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="1.完成了系统初始化配置 2.完成了用户管理模块，为不同角色的用户赋予了不同的操作权限 3.完成了日志记录，引入逻辑删除字段，便于系统的备份与恢复" />
-    <option name="LAST_COMMIT_MESSAGE" value="1.完成了系统初始化配置 2.完成了用户管理模块，为不同角色的用户赋予了不同的操作权限 3.完成了日志记录，引入逻辑删除字段，便于系统的备份与恢复" />
+    <MESSAGE value="完成了管理员新增医生以及医生排班的功能。确保医生按ID查询后能够得到排班记录" />
+    <option name="LAST_COMMIT_MESSAGE" value="完成了管理员新增医生以及医生排班的功能。确保医生按ID查询后能够得到排班记录" />
   </component>
 </project>
