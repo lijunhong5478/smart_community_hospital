@@ -2,6 +2,7 @@ package com.tyut.interceptor;
 
 import com.tyut.context.BaseContext;
 import com.tyut.context.UserContext;
+import com.tyut.context.WebSocketContext;
 import com.tyut.exception.BaseException;
 import com.tyut.properties.JwtProperties;
 import com.tyut.utils.JwtUtil;
@@ -60,6 +61,9 @@ public class JwtInterceptor implements HandlerInterceptor {
 
             BaseContext.set(context);
 
+            WebSocketContext.setUserId(id);
+            WebSocketContext.setUserType(role);
+
             return true;
 
         } catch (BaseException e) {
@@ -76,5 +80,6 @@ public class JwtInterceptor implements HandlerInterceptor {
                                 Exception ex) {
 
         BaseContext.remove();
+        WebSocketContext.remove();
     }
 }

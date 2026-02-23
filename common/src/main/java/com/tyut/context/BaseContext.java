@@ -4,6 +4,7 @@ public class BaseContext {
 
     private static final ThreadLocal<UserContext> THREAD_LOCAL = new ThreadLocal<>();
 
+
     /**
      * 设置当前用户
      */
@@ -33,6 +34,8 @@ public class BaseContext {
         UserContext context = THREAD_LOCAL.get();
         return context != null ? context.getRole() : null;
     }
+
+
 
     /**
      * 清除当前用户（必须调用）
