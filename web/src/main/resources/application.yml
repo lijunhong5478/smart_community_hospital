@@ -46,3 +46,13 @@ springfox:
   documentation:
     swagger-ui:
       enabled: true
+langchain4j:
+  ollama:
+    # Ollama服务地址，默认是localhost:11434
+    base-url: http://localhost:11434
+    # 使用的模型名称，对应您列出的deepseek-r1:1.5b
+    model-name: deepseek-r1:1.5b
+    # 超时设置
+    connect-timeout: 30
+    read-timeout: 60
+    write-timeout: 60

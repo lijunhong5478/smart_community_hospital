@@ -1,10 +1,12 @@
 package com.tyut.interceptor;
 
+import com.tyut.constant.AccountConstant;
 import com.tyut.context.BaseContext;
 import com.tyut.context.UserContext;
 import com.tyut.context.WebSocketContext;
 import com.tyut.exception.BaseException;
 import com.tyut.properties.JwtProperties;
+import com.tyut.result.ResultCode;
 import com.tyut.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +34,7 @@ public class JwtInterceptor implements HandlerInterceptor {
 
         if (token == null || token.isEmpty()) {
             log.error("Token缺失");
-            response.setStatus(401);
+            response.setStatus(ResultCode.UNAUTHORIZED);
             return false;
         }
 

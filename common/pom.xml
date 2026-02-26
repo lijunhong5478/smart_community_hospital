@@ -72,6 +72,14 @@
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
         </dependency>
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-ollama</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.tyut</groupId>
+            <artifactId>pojo</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

@@ -102,7 +102,14 @@ public class DoctorServiceImpl implements DoctorService {
         // 为每个医生单独查询排班信息
         for (DoctorDetailVO doctor : doctors) {
             LambdaQueryWrapper<DoctorSchedule> scheduleWrapper = new LambdaQueryWrapper<>();
-            scheduleWrapper.eq(DoctorSchedule::getDoctorId, doctor.getUserId());
+            scheduleWrapper.eq(DoctorSchedule::getDoctorId, doctor.getUserId())
+                    .eq(DoctorSchedule::getStatus, 1);//规定排班内停诊的医生不显示
+            if (queryDTO.getWeekDay() != null) {
+                scheduleWrapper.eq(DoctorSchedule::getWeekDay, queryDTO.getWeekDay());
+            }
+            if (queryDTO.getTimeSlot() != null) {
+                scheduleWrapper.eq(DoctorSchedule::getTimeSlot, queryDTO.getTimeSlot());
+            }
             List<DoctorSchedule> schedules = doctorScheduleMapper.selectList(scheduleWrapper);
             doctor.setDoctorSchedules(schedules);
         }

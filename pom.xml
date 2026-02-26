@@ -33,6 +33,7 @@
         <jaxb-api>2.3.1</jaxb-api>
         <poi>3.16</poi>
         <mysql.version>8.0.33</mysql.version>
+        <langchain4j>0.32.0</langchain4j>
 
     </properties>
     <parent>
@@ -113,13 +114,14 @@
                 <artifactId>poi-ooxml</artifactId>
                 <version>${poi}</version>
             </dependency>
-            
+
             <!-- MySQL驱动 -->
             <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>com.tyut</groupId>
                 <artifactId>server</artifactId>
@@ -135,6 +137,22 @@
                 <artifactId>pojo</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>dev.langchain4j</groupId>
+                <artifactId>langchain4j</artifactId>
+                <version>${langchain4j}</version>
+            </dependency>
+            <dependency>
+                <groupId>dev.langchain4j</groupId>
+                <artifactId>langchain4j-ollama</artifactId>
+                <version>${langchain4j}</version>
+            </dependency>
+            <dependency>
+                <groupId>dev.langchain4j</groupId>
+                <artifactId>langchain4j-spring-boot-starter</artifactId>
+                <version>${langchain4j}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 </project>
