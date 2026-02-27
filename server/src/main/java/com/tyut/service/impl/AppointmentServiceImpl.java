@@ -3,10 +3,8 @@ package com.tyut.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.tyut.constant.AccountConstant;
-import com.tyut.constant.AppointConstant;
-import com.tyut.constant.DiseaseLevelConstant;
-import com.tyut.constant.VisitConstant;
+import com.tyut.annotation.DataBackUp;
+import com.tyut.constant.*;
 import com.tyut.context.BaseContext;
 import com.tyut.context.UserContext;
 import com.tyut.dto.AppointmentQueryDTO;
@@ -20,8 +18,8 @@ import com.tyut.result.PageResult;
 import com.tyut.service.AppointmentService;
 import com.tyut.utils.AppointmentUtil;
 import com.tyut.utils.QueueManagerUtil;
+import com.tyut.utils.TriageUtil;
 import com.tyut.websocket.WebSocketServer;
-import dev.langchain4j.model.ollama.OllamaChatModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +40,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Autowired
     private DoctorScheduleMapper doctorScheduleMapper;
     @Autowired
-    private OllamaChatModel chatModel;
+    private TriageUtil triageUtil;
     @Autowired
     private WebSocketServer webSocketServer;
 
@@ -60,6 +58,7 @@ public class AppointmentServiceImpl implements AppointmentService {
      *
      * @param dto
      */
+    @DataBackUp(module = ModuleConstant.APPOINTMENT)
     @Override
     public void saveAppointment(ExactTimeAppointmentDTO dto) {
         Appointment appointment = new Appointment();
@@ -75,7 +74,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         AppointmentQueryDTO query= new AppointmentQueryDTO();
         BeanUtils.copyProperties(dto, query);
         Integer weekDay = doctorSchedule.getWeekDay();
-        Integer triageLevel = determineTriageLevel(appointment.getSymptom());
+        Integer triageLevel = triageUtil.determineTriageLevel(appointment.getSymptom());
         appointment.setTriageLevel(triageLevel);
         String queueNo = AppointmentUtil.generateQueueNo(weekDay, doctorSchedule.getTimeSlot()
                 , dto.getDoctorId(), dto.getResidentId());
@@ -137,7 +136,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .dataList(appointmentIPage.getRecords())
                 .build();
     }
-
+    @DataBackUp(module = ModuleConstant.APPOINTMENT)
     @Override
     public void cancelAppointment(Long appointmentId, String cancelReason) {
         Appointment appointment = appointmentMapper.selectById(appointmentId);
@@ -151,8 +150,11 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointment.setCancelReason(cancelReason);
         appointment.setCancelTime(LocalDateTime.now());
         appointmentMapper.updateById(appointment);
-    }
 
+        //发送通知给医生
+        sendNotification("doctor", appointment.getDoctorId(), "取消预约通知", appointment.getQueueNo());
+    }
+    @DataBackUp(module = ModuleConstant.APPOINTMENT)
     @Override
     public void call(Long appointmentId) {
         Appointment appointment = appointmentMapper.selectById(appointmentId);
@@ -166,7 +168,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointmentMapper.updateById(appointment);
         sendNotification("resident", appointment.getResidentId(), "叫号通知", appointment.getQueueNo());
     }
-
+    @DataBackUp(module = ModuleConstant.APPOINTMENT)
     @Override
     public void startConsult(Long appointmentId) {
         Appointment appointment = appointmentMapper.selectById(appointmentId);
@@ -179,7 +181,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointment.setVisitStatus(VisitConstant.IN_VISIT);
         appointmentMapper.updateById(appointment);
     }
-
+    @DataBackUp(module = ModuleConstant.APPOINTMENT)
     @Override
     public void skip(Long appointmentId) {
         Appointment appointment = appointmentMapper.selectById(appointmentId);
@@ -190,8 +192,9 @@ public class AppointmentServiceImpl implements AppointmentService {
         }
         appointment.setVisitStatus(VisitConstant.SKIPPED);
         appointmentMapper.updateById(appointment);
+        sendNotification("resident", appointment.getResidentId(), "过号通知", appointment.getQueueNo());
     }
-
+    @DataBackUp(module = ModuleConstant.APPOINTMENT)
     @Override
     public void finish(Long appointmentId) {
         Appointment appointment = appointmentMapper.selectById(appointmentId);
@@ -203,6 +206,17 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointment.setAppointmentStatus(AppointConstant.FINSHED);
         appointment.setVisitStatus(VisitConstant.DONE);
         appointmentMapper.updateById(appointment);
+        sendNotification("resident", appointment.getResidentId(), "结束咨询通知", appointment.getQueueNo());
+    }
+    @Override
+    public Boolean isAppointed(AppointmentQueryDTO dto) {
+        LambdaQueryWrapper<Appointment> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Appointment::getResidentId, dto.getResidentId())
+                .eq(Appointment::getDoctorId,dto.getDoctorId())
+                .eq(Appointment::getAppointmentDate,dto.getAppointmentDate())
+                .eq(Appointment::getAppointmentTime,dto.getAppointmentTime());
+        Appointment appointment = appointmentMapper.selectOne(queryWrapper);
+        return appointment != null;
     }
 
     /**
@@ -216,106 +230,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                         dto.getVisitStatus() == VisitConstant.CALLED);
     }
 
-    /**
-     * 根据症状描述确定分诊等级
-     *
-     * @param symptom
-     * @return
-     */
-    private Integer determineTriageLevel(String symptom) {
-        if (symptom == null || symptom.trim().isEmpty()) {
-            return DiseaseLevelConstant.LEVEL_4_MINOR;
-        }
-
-        try {
-            // 1. 使用角色设定与明确的任务边界
-            // 2. 引入 Few-Shot (少样本) 引导模型模仿输出
-            // 3. 增加强力后缀约束
-            String prompt = "### Role\n" +
-                    "你是一位急诊科分诊专家。\n\n" +
-                    "### Task\n" +
-                    "根据患者症状描述，从[1, 2, 3, 4]中选择一个分级数字。只需输出数字，严禁输出任何文字解释。\n\n" +
-                    "### Rules\n" +
-                    "1级: 危急(胸痛/呼吸停止/大出血/意识丧失)\n" +
-                    "2级: 急重(剧痛/高热39℃+/严重外伤)\n" +
-                    "3级: 普通(轻度腹痛/低烧/咳嗽)\n" +
-                    "4级: 非紧急(普通感冒/轻微擦伤/复诊)\n\n" +
-                    "### Examples\n" +
-                    "症状：我突然觉得喘不上气，胸口像被大石头压着。\n" +
-                    "结果：1\n" +
-                    "症状：孩子感冒流鼻涕两天了。\n" +
-                    "结果：4\n\n" +
-                    "### Input\n" +
-                    "症状：" + symptom + "\n" +
-                    "结果：";
-
-            String response = chatModel.generate(prompt).trim();
-
-            // 鲁棒性处理：只取返回内容的第一个字符（防止模型在数字后面加句号或废话）
-            if (response.length() > 0) {
-                // 提取字符串中的第一个数字
-                String firstDigit = response.replaceAll("[^1-4]", "");
-                if (!firstDigit.isEmpty()) {
-                    int level = Character.getNumericValue(firstDigit.charAt(0));
-                    return level;
-                }
-            }
-
-            return getLevelByKeyword(symptom);
-        } catch (Exception e) {
-            return getLevelByKeyword(symptom);
-        }
-    }
-
-    /**
-     * 关键词匹配备用方案（优化版）
-     * 逻辑：从致命性症状向轻微症状逐级过滤
-     */
-    private int getLevelByKeyword(String symptom) {
-        if (symptom == null) return DiseaseLevelConstant.LEVEL_4_MINOR;
-        String s = symptom.toLowerCase();
-
-        // --- 1级：危急 (Life-threatening) ---
-        // 侧重于意识、呼吸、循环三大体征
-        if (containsAny(s, "胸痛", "心梗", "呼吸困难", "窒息", "昏迷", "意识丧失",
-                "大出血", "休克", "心跳骤停", "抽搐", "中毒")) {
-            return DiseaseLevelConstant.LEVEL_1_CRITICAL;
-        }
-
-        // --- 2级：急重 (Emergency) ---
-        // 侧重于“剧烈”程度和高风险器官症状
-        if (containsAny(s, "剧烈", "剧痛", "高热", "39度", "40度", "严重外伤",
-                "骨折", "吞咽困难", "呼吸急促", "急性过敏")) {
-            return DiseaseLevelConstant.LEVEL_2_SEVERE;
-        }
-
-        // --- 3级：普通急诊 (Urgent) ---
-        // 侧重于需要尽快处理的急性症状，但无生命危险
-        if (containsAny(s, "腹痛", "呕吐", "腹泻", "中度", "扭伤", "头晕",
-                "异物", "割伤", "尿频尿急", "持续发烧")) {
-            return DiseaseLevelConstant.LEVEL_3_MODERATE;
-        }
-
-        // --- 4级：非紧急 (Non-urgent) ---
-        // 侧重于慢性病、轻微感冒、复诊、开药
-        // 默认或匹配以下关键词：
-        if (containsAny(s, "感冒", "流鼻涕", "咳嗽", "打喷嚏", "擦伤",
-                "复诊", "咨询", "体检", "配药", "轻微")) {
-            return DiseaseLevelConstant.LEVEL_4_MINOR;
-        }
-
-        return DiseaseLevelConstant.LEVEL_4_MINOR;
-    }
-
-    /**
-     * 辅助方法：判断字符串是否包含数组中的任意关键词
-     */
-    private boolean containsAny(String target, String... keywords) {
-        for (String key : keywords) {
-            if (target.contains(key)) return true;
-        }
-        return false;
-    }
+    
 
     /**
      * 通用通知发送方法

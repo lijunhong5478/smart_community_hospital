@@ -52,7 +52,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/favicon.ico",
                         "/error",
                         "/csrf",
-                        "/common/user/login/**"
+                        "/common/user/login/**",
+                        "/common/user/logout/**",
+                        "/resident/account/register/**"
                 );
     }
 

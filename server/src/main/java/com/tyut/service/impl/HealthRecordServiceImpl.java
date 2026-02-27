@@ -3,11 +3,13 @@ package com.tyut.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.tyut.controller.resident.HealthRecordController;
 import com.tyut.dto.HealthRecordQueryDTO;
 import com.tyut.entity.*;
 import com.tyut.mapper.*;
 import com.tyut.result.PageResult;
 import com.tyut.service.HealthRecordService;
+import com.tyut.utils.CryptoUtil;
 import com.tyut.vo.HealthRecordVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,9 @@ public class HealthRecordServiceImpl implements HealthRecordService {
     @Autowired
     private ResidentMedicalHistoryMapper residentMedicalHistoryMapper;
     
+    @Autowired
+    private CryptoUtil cryptoUtil;
+    
     @Override
     public PageResult list(HealthRecordQueryDTO queryDTO) {
         // 构建分页对象
@@ -49,12 +54,7 @@ public class HealthRecordServiceImpl implements HealthRecordService {
         // 构建查询条件
         LambdaQueryWrapper<HealthRecord> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(HealthRecord::getIsDeleted, 0); // 只查询未删除的记录
-        
-        // 根据不同条件进行查询
-        if (queryDTO.getUserId() != null) {
-            queryWrapper.eq(HealthRecord::getResidentId, queryDTO.getUserId());
-        }
-        
+
         // 如果提供了姓名、身份证或电话号码，需要联表查询
         if (StringUtils.hasText(queryDTO.getRealName()) || 
             StringUtils.hasText(queryDTO.getIdCard()) || 
@@ -79,7 +79,18 @@ public class HealthRecordServiceImpl implements HealthRecordService {
         
         return new PageResult(pageData.getTotal(), voList);
     }
-    
+
+    @Override
+    public HealthRecordVO getByResidentId(Long id) {
+        LambdaQueryWrapper<HealthRecord> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(HealthRecord::getResidentId, id);
+        HealthRecord healthRecord = healthRecordMapper.selectOne(queryWrapper);
+        if (healthRecord != null) {
+            return convertToVO(healthRecord);
+        }
+        return null;
+    }
+
     /**
      * 根据查询条件获取用户ID列表
      */
@@ -102,7 +113,9 @@ public class HealthRecordServiceImpl implements HealthRecordService {
         }
         
         if (StringUtils.hasText(queryDTO.getIdCard())) {
-            userWrapper.eq(SysUser::getIdCard, queryDTO.getIdCard());
+            // 对输入的身份证号码进行加密后再查询
+            String encryptedIdCard = cryptoUtil.encodeIdCard(queryDTO.getIdCard());
+            userWrapper.eq(SysUser::getIdCard, encryptedIdCard);
         }
         
         if (StringUtils.hasText(queryDTO.getPhone())) {
@@ -151,7 +164,19 @@ public class HealthRecordServiceImpl implements HealthRecordService {
                 .eq(ResidentMedicalHistory::getIsDeleted, 0);
         List<ResidentMedicalHistory> medicalHistories = residentMedicalHistoryMapper.selectList(historyWrapper);
         vo.setResidentMedicalHistories(medicalHistories);
-        
+        // 查询居民的基本信息
+        SysUser sysUser = userMapper.selectById(healthRecord.getResidentId());
+        vo.setPhone(sysUser.getPhone());
+        vo.setIdCard(cryptoUtil.decodeIdCard(sysUser.getIdCard()));
+        vo.setAvatarUrl(sysUser.getAvatarUrl());
+        LambdaQueryWrapper<ResidentProfile> profileWrapper = new LambdaQueryWrapper<>();
+        profileWrapper.eq(ResidentProfile::getUserId, healthRecord.getResidentId());
+        ResidentProfile profile = residentMapper.selectOne(profileWrapper);
+        vo.setName(profile.getName());
+        vo.setAge(profile.getAge());
+        vo.setGender(profile.getGender());
+        vo.setContact(profile.getContact());
+        vo.setAddress(profile.getAddress());
         return vo;
     }
 }

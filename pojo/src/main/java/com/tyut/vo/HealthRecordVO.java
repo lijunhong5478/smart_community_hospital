@@ -23,6 +23,14 @@ public class HealthRecordVO {
     private LocalDateTime updateTime;
     private Integer isDeleted;
     private LocalDateTime createTime;
+    private String avatarUrl;
+    private String name;
+    private Integer age;
+    private Integer gender;
+    private String idCard;
+    private String phone;
+    private String address;
+    private String contact;
     private List<DiagnosisReport> diagnosisReports;
     private List<ExaminationReport> examinationReports;
     private List<PhysicalExamRecord> physicalExamRecords;

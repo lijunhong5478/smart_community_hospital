@@ -46,10 +46,13 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     @DataBackUp(module = ModuleConstant.DOCTOR)
     public void registerDoctor(AddDoctorDTO addDoctorDTO) {
+        // 对身份证号码进行加密
+        String encryptedIdCard = cryptoUtil.encodeIdCard(addDoctorDTO.getIdCard());
+        
         SysUser sysUser = SysUser.builder()
                 .username(addDoctorDTO.getUsername())
                 .phone(addDoctorDTO.getPhone())
-                .idCard(addDoctorDTO.getIdCard())
+                .idCard(encryptedIdCard)
                 .password(cryptoUtil.encodePassword(addDoctorDTO.getPassword()))
                 .avatarUrl(addDoctorDTO.getAvatarUrl())
                 .status(AccountConstant.STATUS_NORMAL)

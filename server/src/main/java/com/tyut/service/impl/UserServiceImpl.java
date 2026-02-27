@@ -40,11 +40,6 @@ public class UserServiceImpl implements UserService {
     //注册时BaseContext中没有存储用户ID和Role,因此不能与AOP绑定
     @Autowired
     private OperationLogMapper operationLogMapper;
-    //添加医生需要引入的mapper层
-    @Autowired
-    private DoctorProfileMapper doctorProfileMapper;
-    @Autowired
-    private DoctorScheduleMapper doctorScheduleMapper;
     /**
      * 用户登录
      *
@@ -61,7 +56,9 @@ public class UserServiceImpl implements UserService {
         } else if (type == LoginConstant.TYPE_PHONE) {
             user = userMapper.selectByPhone(loginDTO.getAccount());
         } else if (type == LoginConstant.TYPE_ID_CARD) {
-            user = userMapper.selectByIdCard(loginDTO.getAccount());
+            // 对输入的身份证号码进行加密后再查询
+            String encryptedIdCard = cryptoUtil.encodeIdCard(loginDTO.getAccount());
+            user = userMapper.selectByIdCard(encryptedIdCard);
         }
         if (user == null || user.getIsDeleted() == AccountConstant.IS_DELETE) {
             throw new BaseException("用户不存在");
@@ -136,10 +133,13 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void registerResident(ResidentRegisterDTO residentRegisterDTO) {
+        // 对身份证号码进行加密
+        String encryptedIdCard = cryptoUtil.encodeIdCard(residentRegisterDTO.getIdCard());
+        
         SysUser sysUser = SysUser.builder()
                 .username(residentRegisterDTO.getUsername())
                 .phone(residentRegisterDTO.getPhone())
-                .idCard(residentRegisterDTO.getIdCard())
+                .idCard(encryptedIdCard)
                 .password(cryptoUtil.encodePassword(residentRegisterDTO.getPassword()))
                 .avatarUrl(residentRegisterDTO.getAvatarUrl())
                 .status(AccountConstant.STATUS_NORMAL)

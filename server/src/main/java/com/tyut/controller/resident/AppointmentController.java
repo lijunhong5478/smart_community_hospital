@@ -34,4 +34,9 @@ public class AppointmentController {
         appointmentService.cancelAppointment(appointmentId,cancelReason);
         return Result.success();
     }
+    @ApiOperation("判断是否已经挂号")
+    @PostMapping("/isAppointed")
+    public Result<Boolean> isAppointed(@RequestBody AppointmentQueryDTO dto){
+        return Result.success(appointmentService.isAppointed(dto));
+    }
 }

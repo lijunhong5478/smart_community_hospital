@@ -12,4 +12,5 @@ public interface AppointmentService {
     void startConsult(Long appointmentId);
     void skip(Long appointmentId);
     void finish(Long appointmentId);
+    Boolean isAppointed(AppointmentQueryDTO dto);
 }

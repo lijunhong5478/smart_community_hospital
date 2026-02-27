@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 @Component
 public class CryptoUtil {
@@ -57,21 +60,66 @@ public class CryptoUtil {
     }
 
     /**
-     * 批量重置密码工具方法 - 将所有用户密码重置为123456的MD5加密版本
+     * AES加密身份证号码
      */
-    public String generateDefaultEncryptedPassword() {
-        return encodePassword("123456");
+    public String encodeIdCard(String rawIdCard) {
+        try {
+            if (rawIdCard == null || rawIdCard.isEmpty()) {
+                throw new RuntimeException("身份证号码不能为空");
+            }
+            
+            // 使用MD5将盐值转换为16字节的AES密钥
+            byte[] keyBytes = DigestUtils.md5(salt.getBytes(StandardCharsets.UTF_8));
+            SecretKeySpec secretKey = new SecretKeySpec(keyBytes, "AES");
+            
+            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+            
+            byte[] encryptedBytes = cipher.doFinal(rawIdCard.getBytes(StandardCharsets.UTF_8));
+            return Base64.getEncoder().encodeToString(encryptedBytes);
+        } catch (Exception e) {
+            throw new RuntimeException("AES加密身份证失败", e);
+        }
     }
 
     /**
-     * 直接MD5加密（不加盐，用于兼容旧数据）
+     * AES解密身份证号码
      */
-    public String md5Encrypt(String content) {
-        if (content == null) {
-            throw new RuntimeException("内容不能为空");
+    public String decodeIdCard(String encryptedIdCard) {
+        try {
+            if (encryptedIdCard == null || encryptedIdCard.isEmpty()) {
+                throw new RuntimeException("加密身份证号码不能为空");
+            }
+            
+            // 使用MD5将盐值转换为16字节的AES密钥
+            byte[] keyBytes = DigestUtils.md5(salt.getBytes(StandardCharsets.UTF_8));
+            SecretKeySpec secretKey = new SecretKeySpec(keyBytes, "AES");
+            
+            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            cipher.init(Cipher.DECRYPT_MODE, secretKey);
+            
+            byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(encryptedIdCard));
+            return new String(decryptedBytes, StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            throw new RuntimeException("AES解密身份证失败", e);
         }
-        return DigestUtils.md5Hex(content.getBytes(StandardCharsets.UTF_8));
     }
+
+    /**
+     * 验证身份证号码是否匹配
+     */
+    public boolean matchesIdCard(String rawIdCard, String encodedIdCard) {
+        if (rawIdCard == null || encodedIdCard == null) {
+            return false;
+        }
+        try {
+            String decryptedIdCard = decodeIdCard(encodedIdCard);
+            return rawIdCard.equals(decryptedIdCard);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 
     /**
      * 测试加密解密是否对应的工具方法
@@ -80,6 +128,23 @@ public class CryptoUtil {
         try {
             String encrypted = encodePassword(originalText);
             return matches(originalText, encrypted);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+
+    /**
+     * 检查身份证是否为AES加密格式
+     */
+    public boolean isIdCardEncrypted(String idCard) {
+        if (idCard == null || idCard.isEmpty()) {
+            return false;
+        }
+        try {
+            // 尝试解码Base64，如果成功可能是AES加密的
+            Base64.getDecoder().decode(idCard);
+            return true;
         } catch (Exception e) {
             return false;
         }

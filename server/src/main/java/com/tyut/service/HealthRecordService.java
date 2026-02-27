@@ -13,4 +13,8 @@ public interface HealthRecordService {
      * @return 分页结果，包含HealthRecordVO列表
      */
     PageResult list(HealthRecordQueryDTO queryDTO);
+    /**
+     * 根据用户id查询健康档案信息
+     */
+    HealthRecordVO getByResidentId(Long id);
 }

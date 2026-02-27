@@ -17,9 +17,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @ApiModel(description = "健康档案查询DTO")
 public class HealthRecordQueryDTO {
-    
-    @ApiModelProperty(value = "用户ID", example = "1")
-    private Long userId;
+
     
     @ApiModelProperty(value = "用户真实姓名", example = "张三")
     private String realName;

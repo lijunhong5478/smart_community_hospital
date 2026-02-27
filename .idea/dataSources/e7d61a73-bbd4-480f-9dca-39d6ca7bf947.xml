@@ -2218,7 +2218,7 @@ time_slot</ColNames>
     </column>
     <column id="540" parent="331" name="id_card">
       <Position>4</Position>
-      <StoredType>varchar(30)|0s</StoredType>
+      <StoredType>varchar(50)|0s</StoredType>
     </column>
     <column id="541" parent="331" name="password">
       <NotNull>1</NotNull>
