@@ -1,4 +1,4 @@
-package com.tyut.controller.doctor;
+package com.tyut.controller.resident;
 
 import com.tyut.dto.ExaminationReportQueryDTO;
 import com.tyut.entity.ExaminationReport;
@@ -10,20 +10,12 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-@RestController("doctorExaminationReportController")
-@RequestMapping("/doctor/examinationReport")
-@Api(tags = "医生检查报告相关接口")
+@RestController("residentExaminationReportController")
+@RequestMapping("/resident/examinationReport")
+@Api(tags="居民检查报告接口")
 public class ExaminationReportController {
     @Autowired
     private ExaminationReportService examinationReportService;
-    @PostMapping
-    @ApiOperation("保存检查报告")
-    public Result<String> saveBatch(@RequestBody List<ExaminationReport> examinationReports){
-        examinationReportService.saveBatch(examinationReports);
-        return Result.success();
-    }
     @GetMapping("/{id}")
     @ApiOperation("根据id查询检查报告")
     public Result<ExaminationReport> getById(@PathVariable Long id){

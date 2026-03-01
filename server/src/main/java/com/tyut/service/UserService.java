@@ -30,4 +30,6 @@ public interface UserService {
     void deleteUser(Long id);
 
     void revertUser(Long id);
+
+    void logout();
 }

@@ -91,6 +91,14 @@ public class HealthRecordServiceImpl implements HealthRecordService {
         return null;
     }
 
+    @Override
+    public Long getIdByResidentId(Long residentId) {
+        LambdaQueryWrapper<HealthRecord> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(HealthRecord::getResidentId, residentId);
+        HealthRecord healthRecord = healthRecordMapper.selectOne(queryWrapper);
+        return healthRecord != null ? healthRecord.getId() : null;
+    }
+
     /**
      * 根据查询条件获取用户ID列表
      */

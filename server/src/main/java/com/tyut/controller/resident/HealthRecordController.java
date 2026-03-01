@@ -22,17 +22,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class HealthRecordController {
     @Autowired
     private HealthRecordService healthRecordService;
-    @Autowired
-    private MedicalVisitService medicalVisitService;
 
     @GetMapping("/{id}")
     @ApiOperation("根据id查询健康档案")
     public Result<HealthRecordVO> getHealthRecordById(@PathVariable Long id){
         return Result.success(healthRecordService.getByResidentId(id));
     }
-    @GetMapping("/medicalVisit/{id}")
-    @ApiOperation("根据visitId查询用户的详细问诊记录")
-    public Result<MedicalVisitVO> getMedicalVisitById(@PathVariable Long id){
-        return Result.success(medicalVisitService.getById(id));
+    @GetMapping("/getId")
+    public Result<Long> getIdByResidentId(Long id){
+        return Result.success(healthRecordService.getIdByResidentId(id));
     }
 }

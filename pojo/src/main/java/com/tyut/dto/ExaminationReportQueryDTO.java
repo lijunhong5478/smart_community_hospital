@@ -1,6 +1,5 @@
 package com.tyut.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,13 +12,11 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MedicalVisitQueryDTO {
-    private Long residentId;
-    private String patientName;
-    private String doctorName;
-    @JsonFormat(pattern = "yyyy-MM-dd")
+public class ExaminationReportQueryDTO {
+    private Long healthRecordId;
+    private Integer reportType;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate createDate;
-    private Integer pageSize;
     private Integer pageNum;
+    private Integer pageSize;
 }

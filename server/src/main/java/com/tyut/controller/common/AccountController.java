@@ -40,5 +40,15 @@ public class AccountController {
         userService.updatePassword(oldPassword, newPassword);
         return Result.success();
     }
+    /**
+     * 用户退出登录
+     * 清除当前用户的上下文信息
+     */
+    @ApiOperation("退出登录")
+    @PostMapping("/logout")
+    public Result<String> logout() {
+        userService.logout();
+        return Result.success("退出登录成功");
+    }
 
 }

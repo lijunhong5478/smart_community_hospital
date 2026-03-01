@@ -10,6 +10,7 @@ import com.tyut.context.BaseContext;
 import com.tyut.dto.MedicalVisitQueryDTO;
 import com.tyut.entity.DoctorProfile;
 import com.tyut.entity.MedicalVisit;
+import com.tyut.entity.ResidentProfile;
 import com.tyut.entity.SysUser;
 import com.tyut.exception.BaseException;
 import com.tyut.mapper.DoctorProfileMapper;
@@ -28,6 +29,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class MedicalVisitServiceImpl implements MedicalVisitService {
@@ -36,8 +38,9 @@ public class MedicalVisitServiceImpl implements MedicalVisitService {
     @Autowired
     private DoctorProfileMapper doctorProfileMapper;
     @Autowired
+    private ResidentMapper residentMapper;
+    @Autowired
     private UserMapper userMapper;
-
 
     @Override
     public MedicalVisitVO getById(Long id) {
@@ -73,11 +76,20 @@ public class MedicalVisitServiceImpl implements MedicalVisitService {
     public PageResult list(MedicalVisitQueryDTO medicalVisitQueryDTO) {
         Page<MedicalVisit> page = new Page<>(medicalVisitQueryDTO.getPageNum(), medicalVisitQueryDTO.getPageSize());
         LambdaQueryWrapper<MedicalVisit> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(MedicalVisit::getResidentId, medicalVisitQueryDTO.getResidentId());
+        if(medicalVisitQueryDTO.getResidentId() != null){
+            queryWrapper.eq(MedicalVisit::getResidentId, medicalVisitQueryDTO.getResidentId());
+        }
+        if(medicalVisitQueryDTO.getPatientName() != null){
+            List<ResidentProfile> residentProfiles = residentMapper.selectList(new LambdaQueryWrapper<ResidentProfile>()
+                    .eq(ResidentProfile::getName, medicalVisitQueryDTO.getPatientName()));
+            queryWrapper.in(MedicalVisit::getResidentId,
+                    residentProfiles.stream().map(ResidentProfile::getUserId).collect(Collectors.toList()));
+        }
         if (medicalVisitQueryDTO.getDoctorName() != null) {
-            DoctorProfile doctorProfile = doctorProfileMapper.selectOne(new LambdaQueryWrapper<DoctorProfile>()
+            List<DoctorProfile> doctorProfiles = doctorProfileMapper.selectList(new LambdaQueryWrapper<DoctorProfile>()
                     .eq(DoctorProfile::getName, medicalVisitQueryDTO.getDoctorName()));
-            queryWrapper.in(MedicalVisit::getDoctorId, doctorProfile.getUserId());
+            queryWrapper.in(MedicalVisit::getDoctorId,
+                    doctorProfiles.stream().map(DoctorProfile::getUserId).collect(Collectors.toList()));
         }
         if (medicalVisitQueryDTO.getCreateDate() != null) {
             queryWrapper.between(MedicalVisit::getCreateTime, medicalVisitQueryDTO.getCreateDate().atStartOfDay()
@@ -85,7 +97,6 @@ public class MedicalVisitServiceImpl implements MedicalVisitService {
         }
         IPage<MedicalVisit> medicalVisitIPage = medicalVisitMapper.selectPage(page, queryWrapper);
         List<MedicalVisit> medicalVisits = medicalVisitIPage.getRecords();
-        System.out.println(medicalVisits);
         List<MedicalVisitVO> vos = castToVO(medicalVisits);
         return PageResult.builder()
                 .total(medicalVisitIPage.getTotal())

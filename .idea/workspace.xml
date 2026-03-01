@@ -4,37 +4,35 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84416b3d-c963-4e6e-b766-645b3dfc8eec" name="Changes" comment="完成了挂号叫号模块核心功能点，补充了定时操作，可以每日检查逾期的预约并清除">
-      <change afterPath="$PROJECT_DIR$/common/src/main/java/com/tyut/utils/TriageUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/智能分诊功能说明.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pojo/src/main/java/com/tyut/dto/MedicalVisitQueryDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pojo/src/main/java/com/tyut/vo/MedicalVisitVO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/common/TriageTestController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/doctor/ExaminationReportController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/doctor/MedicalVisitController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/ExaminationReportService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/ExaminationReportServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/triage_model/Modelfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web/src/test/java/IdCardAESTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/e7d61a73-bbd4-480f-9dca-39d6ca7bf947.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/e7d61a73-bbd4-480f-9dca-39d6ca7bf947.xml" afterDir="false" />
+    <list default="true" id="84416b3d-c963-4e6e-b766-645b3dfc8eec" name="Changes" comment="完善了身份证号加密逻辑，目前用户的身份证号为从140000000000000000到140000000000000008,后续会按此规律一次增加用户，同时完成了接诊记录相关操作">
+      <change afterPath="$PROJECT_DIR$/pojo/src/main/java/com/tyut/dto/DiagnosisReportQueryDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pojo/src/main/java/com/tyut/dto/ExaminationReportQueryDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/doctor/DiagnosisReportController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/doctor/PhysicalExamRecordController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/doctor/ResidentMedicalHistoryController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/resident/ExaminationReportController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/resident/MedicalVisitController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/resident/PhysicalExamRecordController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/resident/ResidentMedicalHistoryController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/DiagnosisReportService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/PhysicalExamRecordService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/ResidentMedicalHistoryService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/DiagnosisReportServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/PhysicalExamRecordServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/ResidentMedicalHistoryServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/tyut/config/WebMvcConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/tyut/config/WebMvcConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/tyut/utils/CryptoUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/tyut/utils/CryptoUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pojo/src/main/java/com/tyut/dto/HealthRecordQueryDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/pojo/src/main/java/com/tyut/dto/HealthRecordQueryDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pojo/src/main/java/com/tyut/vo/HealthRecordVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/pojo/src/main/java/com/tyut/vo/HealthRecordVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/common/TestController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/doctor/HealthRecordController.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/doctor/HealthRecordController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/resident/AppointmentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/resident/AppointmentController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pojo/src/main/java/com/tyut/dto/MedicalVisitQueryDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/pojo/src/main/java/com/tyut/dto/MedicalVisitQueryDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/common/AccountController.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/common/AccountController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/doctor/ExaminationReportController.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/doctor/ExaminationReportController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/doctor/MedicalVisitController.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/doctor/MedicalVisitController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/resident/HealthRecordController.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/resident/HealthRecordController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/AppointmentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/AppointmentService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/ExaminationReportService.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/ExaminationReportService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/HealthRecordService.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/HealthRecordService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/MedicalVisitService.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/MedicalVisitService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/AppointmentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/AppointmentServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/DoctorServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/DoctorServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/ExaminationReportServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/ExaminationReportServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/HealthRecordServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/HealthRecordServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/MedicalVisitServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/MedicalVisitServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/UserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,6 +84,9 @@
   <component name="MavenRunner">
     <option name="jreName" value="1.8" />
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 3
 }</component>
@@ -95,52 +96,52 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Application.executor": "Run",
-    "Application.AppointmentUtil.executor": "Run",
-    "JUnit.ConsultationServiceTest.testBasicCommunication.executor": "Run",
-    "JUnit.IdCardAESTest.testEncryptionVerification.executor": "Run",
-    "JUnit.IdCardAESTest.testIdCardRangeEncryption.executor": "Run",
-    "JUnit.TestConfig.testConf.executor": "Debug",
-    "JUnit.TestCrypto.test.executor": "Run",
-    "JUnit.TestIdCardEncryption.testIdCardEncryptionFunctionality.executor": "Run",
-    "JUnit.TestSchedule.testResetStatus.executor": "Run",
-    "JUnit.TestSchedule.testResetWeeklyScheduleNumbers.executor": "Run",
-    "Maven.SCH_backend [clean].executor": "Run",
-    "Maven.common [clean].executor": "Run",
-    "Maven.common [install].executor": "Run",
-    "Maven.pojo [clean].executor": "Run",
-    "Maven.pojo [install].executor": "Run",
-    "Maven.server [clean].executor": "Run",
-    "Maven.web [clean].executor": "Run",
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Spring Boot.Application.executor": "Run",
-    "git-widget-placeholder": "master",
-    "kotlin-language-version-configured": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Application.executor&quot;: &quot;Run&quot;,
+    &quot;Application.AppointmentUtil.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ConsultationServiceTest.testBasicCommunication.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.IdCardAESTest.testEncryptionVerification.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.IdCardAESTest.testIdCardRangeEncryption.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TestConfig.testConf.executor&quot;: &quot;Debug&quot;,
+    &quot;JUnit.TestCrypto.test.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TestIdCardEncryption.testIdCardEncryptionFunctionality.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TestSchedule.testResetStatus.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.TestSchedule.testResetWeeklyScheduleNumbers.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.SCH_backend [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.common [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.common [install].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.pojo [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.pojo [install].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.server [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.web [clean].executor&quot;: &quot;Run&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Spring Boot.Application.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "mysql_aurora"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql_aurora&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\开发\graduate_dev\SCH_backend\server\src\main\resources\mapper" />
@@ -149,6 +150,7 @@
       <recent name="com.tyut" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.tyut.controller.resident" />
       <recent name="com.tyut.utils" />
       <recent name="com.tyut.properties" />
     </key>
@@ -283,7 +285,11 @@
       <workItem from="1772095819395" duration="9159000" />
       <workItem from="1772155181115" duration="557000" />
       <workItem from="1772155752274" duration="6309000" />
-      <workItem from="1772179263658" duration="13691000" />
+      <workItem from="1772179263658" duration="14021000" />
+      <workItem from="1772194812180" duration="21000" />
+      <workItem from="1772237002320" duration="7844000" />
+      <workItem from="1772328003677" duration="79000" />
+      <workItem from="1772328769312" duration="8752000" />
     </task>
     <task id="LOCAL-00001" summary="1.完成了系统初始化配置 2.完成了用户管理模块，为不同角色的用户赋予了不同的操作权限 3.完成了日志记录，引入逻辑删除字段，便于系统的备份与恢复">
       <option name="closed" value="true" />
@@ -341,7 +347,15 @@
       <option name="project" value="LOCAL" />
       <updated>1772084322680</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="完善了身份证号加密逻辑，目前用户的身份证号为从140000000000000000到140000000000000008,后续会按此规律一次增加用户，同时完成了接诊记录相关操作">
+      <option name="closed" value="true" />
+      <created>1772194698513</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1772194698513</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -376,7 +390,8 @@
     <MESSAGE value="完成了社区居民条件查询医生信息的功能" />
     <MESSAGE value="完成了家庭医生模块所有功能点：包括条件查询医生信息，在线接诊以及查看患者档案。同时引入了定时任务机制，每周一0点会刷新医生排班计划中当前挂号人数以及接诊状态。" />
     <MESSAGE value="完成了挂号叫号模块核心功能点，补充了定时操作，可以每日检查逾期的预约并清除" />
-    <option name="LAST_COMMIT_MESSAGE" value="完成了挂号叫号模块核心功能点，补充了定时操作，可以每日检查逾期的预约并清除" />
+    <MESSAGE value="完善了身份证号加密逻辑，目前用户的身份证号为从140000000000000000到140000000000000008,后续会按此规律一次增加用户，同时完成了接诊记录相关操作" />
+    <option name="LAST_COMMIT_MESSAGE" value="完善了身份证号加密逻辑，目前用户的身份证号为从140000000000000000到140000000000000008,后续会按此规律一次增加用户，同时完成了接诊记录相关操作" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

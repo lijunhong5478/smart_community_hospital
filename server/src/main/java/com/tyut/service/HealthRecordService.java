@@ -17,4 +17,6 @@ public interface HealthRecordService {
      * 根据用户id查询健康档案信息
      */
     HealthRecordVO getByResidentId(Long id);
+
+    Long getIdByResidentId(Long residentId);
 }

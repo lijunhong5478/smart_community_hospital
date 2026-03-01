@@ -7,6 +7,7 @@ import com.tyut.constant.AccountConstant;
 import com.tyut.constant.LoginConstant;
 import com.tyut.constant.ModuleConstant;
 import com.tyut.context.BaseContext;
+import com.tyut.context.WebSocketContext;
 import com.tyut.dto.*;
 import com.tyut.entity.*;
 import com.tyut.exception.BaseException;
@@ -40,6 +41,8 @@ public class UserServiceImpl implements UserService {
     //注册时BaseContext中没有存储用户ID和Role,因此不能与AOP绑定
     @Autowired
     private OperationLogMapper operationLogMapper;
+    @Autowired
+    private HealthRecordMapper healthRecordMapper;
     /**
      * 用户登录
      *
@@ -167,6 +170,14 @@ public class UserServiceImpl implements UserService {
                 .createTime(LocalDateTime.now())
                 .build();
         operationLogMapper.insert(operationLog);
+        HealthRecord healthRecord = HealthRecord.builder()
+                .residentId(sysUser.getId())
+                .title(residentProfile.getName()+"健康档案")
+                .updateTime(LocalDateTime.now())
+                .createTime(LocalDateTime.now())
+                .isDeleted(AccountConstant.NOT_DELETE)
+                .build();
+        healthRecordMapper.insert(healthRecord);
     }
 
     /**
@@ -285,5 +296,12 @@ public class UserServiceImpl implements UserService {
         wrapper.eq(SysUser::getId, id)
                 .set(SysUser::getIsDeleted, AccountConstant.NOT_DELETE);
         userMapper.update(null, wrapper);
+    }
+
+    @Override
+    public void logout() {
+        // 清除当前线程的用户上下文
+        BaseContext.remove();
+        WebSocketContext.remove();
     }
 }
