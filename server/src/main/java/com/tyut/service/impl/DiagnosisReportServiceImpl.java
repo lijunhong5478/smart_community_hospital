@@ -23,8 +23,7 @@ public class DiagnosisReportServiceImpl implements DiagnosisReportService {
     private DiagnosisReportMapper diagnosisReportMapper;
     @Autowired
     private MedicalVisitMapper medicalVisitMapper;
-
-    @DataBackUp(module = ModuleConstant.DOCTOR)
+    @DataBackUp(module = ModuleConstant.DIAGNOSIS_RECORD_INSERT)
     @Override
     public void save(DiagnosisReport diagnosisReport) {
         diagnosisReport.setCreateTime(LocalDateTime.now());
@@ -50,7 +49,7 @@ public class DiagnosisReportServiceImpl implements DiagnosisReportService {
         IPage<DiagnosisReport> pageData = diagnosisReportMapper.selectPage(page, queryWrapper);
         return new PageResult(pageData.getTotal(), pageData.getRecords());
     }
-    @DataBackUp(module = ModuleConstant.HEALTH_RECORD)
+    @DataBackUp(module = ModuleConstant.DIAGNOSIS_RECORD_UPDATE)
     @Override
     public void update(DiagnosisReport diagnosisReport) {
         diagnosisReportMapper.updateById(diagnosisReport);

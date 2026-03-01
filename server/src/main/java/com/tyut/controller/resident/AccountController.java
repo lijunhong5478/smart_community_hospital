@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController("residentAccountController")
 @RequestMapping("/resident/account")
-@Api(tags="居民账号接口")
+@Api(tags="居民-账号接口")
 public class AccountController {
     @Autowired
     private UserService userService;

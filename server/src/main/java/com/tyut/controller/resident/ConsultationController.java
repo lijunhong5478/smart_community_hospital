@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/resident/consultation")
-@Api(tags = "居民咨询接口")
+@Api(tags = "居民-咨询接口")
 public class ConsultationController {
 
     @Autowired

@@ -21,7 +21,7 @@ import java.util.List;
 public class ExaminationReportServiceImpl implements ExaminationReportService {
     @Autowired
     private ExaminationReportMapper examinationReportMapper;
-    @DataBackUp(module = ModuleConstant.HEALTH_RECORD)
+    @DataBackUp(module = ModuleConstant.EXAMINATION_REPORT_INSERT)
     @Override
     public void saveBatch(List<ExaminationReport> examinationReports) {
         examinationReports.forEach(examinationReport -> {

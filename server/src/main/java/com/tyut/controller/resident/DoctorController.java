@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController("residentDoctorController")
 @RequestMapping("/resident/doctor")
-@Api(tags = "社区居民医生信息查询接口")
+@Api(tags = "居民-医生信息接口")
 @Slf4j
 public class DoctorController {
     @Autowired

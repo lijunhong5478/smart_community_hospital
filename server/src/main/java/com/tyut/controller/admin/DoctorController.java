@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController("adminDoctorController")
-@Api(tags = "管理员医生管理接口")
+@Api(tags = "管理员-医生管理接口")
 @RequestMapping("/admin/doctor")
 public class DoctorController {
     @Autowired

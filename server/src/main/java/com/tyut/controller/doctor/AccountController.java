@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController("doctorAccountController")
 @RequestMapping("/doctor/account")
-@Api(tags = "医生账号接口")
+@Api(tags = "医生-账号接口")
 public class AccountController {
     @Autowired
     private UserService userService;

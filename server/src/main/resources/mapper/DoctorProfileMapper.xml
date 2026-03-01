@@ -27,12 +27,6 @@
         <if test="query.departmentId != null">
             AND dp.department_id = #{query.departmentId}
         </if>
-        <if test="query.weekDay != null">
-            AND EXISTS (
-            SELECT 1 FROM doctor_schedule ds
-            WHERE ds.doctor_id = su.id AND ds.week_day = #{query.weekDay}
-            )
-        </if>
         <if test="query.timeSlot != null and query.timeSlot != ''">
             AND EXISTS (
             SELECT 1 FROM doctor_schedule ds
@@ -44,6 +38,22 @@
         </if>
         <if test="query.title != null">
             AND dp.title = #{query.title}
+        </if>
+        <if test="query.workDay != null or (query.timeSlot != null and query.timeSlot != '')">
+            AND EXISTS (
+            SELECT 1 FROM doctor_schedule ds
+            WHERE ds.doctor_id = su.id
+            AND ds.status = 1
+            <if test="query.workDay != null">
+                AND ds.week_day = CASE
+                WHEN DAYOFWEEK(#{query.workDay}) = 1 THEN 7  -- 周日转为7
+                ELSE DAYOFWEEK(#{query.workDay}) - 1         -- 周一到周六减1
+                END
+            </if>
+            <if test="query.timeSlot != null and query.timeSlot != ''">
+                AND ds.time_slot = #{query.timeSlot}
+            </if>
+            )
         </if>
     </where>
     ORDER BY su.id ASC

@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/common/file")
-@Api(tags="文件上传接口")
+@Api(tags="通用-文件上传接口")
 @Slf4j
 public class UploadController {
     @Autowired

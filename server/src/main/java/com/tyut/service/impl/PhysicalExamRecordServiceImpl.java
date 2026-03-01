@@ -3,8 +3,8 @@ package com.tyut.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.tyut.annotation.DataBackUp;
 
+import com.tyut.annotation.DataBackUp;
 import com.tyut.constant.AccountConstant;
 import com.tyut.constant.ModuleConstant;
 import com.tyut.context.BaseContext;
@@ -26,8 +26,7 @@ public class PhysicalExamRecordServiceImpl implements PhysicalExamRecordService 
 
     @Autowired
     private PhysicalExamRecordMapper physicalExamRecordMapper;
-
-    @DataBackUp(module = ModuleConstant.HEALTH_RECORD)
+    @DataBackUp(module = ModuleConstant.PHYSICAL_EXAM_INSERT)
     @Override
     public void saveByDoctor(PhysicalExamRecord physicalExamRecord) {
         // 验证当前用户是否为医生角色

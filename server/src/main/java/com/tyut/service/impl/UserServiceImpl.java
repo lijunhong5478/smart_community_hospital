@@ -43,13 +43,13 @@ public class UserServiceImpl implements UserService {
     private OperationLogMapper operationLogMapper;
     @Autowired
     private HealthRecordMapper healthRecordMapper;
+
     /**
      * 用户登录
      *
      * @param loginDTO
      * @return
      */
-
     @Override
     public LoginUserVO login(LoginDTO loginDTO) {
         SysUser user = null;
@@ -133,12 +133,13 @@ public class UserServiceImpl implements UserService {
      *
      * @param residentRegisterDTO
      */
+    @DataBackUp(module = ModuleConstant.USER_REGISTER)
     @Transactional
     @Override
     public void registerResident(ResidentRegisterDTO residentRegisterDTO) {
         // 对身份证号码进行加密
         String encryptedIdCard = cryptoUtil.encodeIdCard(residentRegisterDTO.getIdCard());
-        
+
         SysUser sysUser = SysUser.builder()
                 .username(residentRegisterDTO.getUsername())
                 .phone(residentRegisterDTO.getPhone())
@@ -172,7 +173,7 @@ public class UserServiceImpl implements UserService {
         operationLogMapper.insert(operationLog);
         HealthRecord healthRecord = HealthRecord.builder()
                 .residentId(sysUser.getId())
-                .title(residentProfile.getName()+"健康档案")
+                .title(residentProfile.getName() + "健康档案")
                 .updateTime(LocalDateTime.now())
                 .createTime(LocalDateTime.now())
                 .isDeleted(AccountConstant.NOT_DELETE)
@@ -185,7 +186,6 @@ public class UserServiceImpl implements UserService {
      *
      * @param updateProfileDTO
      */
-    @DataBackUp(module = ModuleConstant.USER)
     @Override
     public void updateAdmin(UpdateProfileDTO updateProfileDTO) {
         SysUser sysUser = new SysUser();
@@ -198,7 +198,6 @@ public class UserServiceImpl implements UserService {
      *
      * @param updateProfileDTO
      */
-    @DataBackUp(module = ModuleConstant.USER)
     @Override
     public void updateDoctor(UpdateProfileDTO updateProfileDTO) {
         SysUser sysUser = new SysUser();
@@ -212,7 +211,6 @@ public class UserServiceImpl implements UserService {
      * @param updateProfileDTO
      */
 
-    @DataBackUp(module = ModuleConstant.USER)
     @Transactional
     @Override
     public void updateResident(UpdateProfileDTO updateProfileDTO) {
@@ -241,8 +239,7 @@ public class UserServiceImpl implements UserService {
      * @param oldPassword
      * @param newPassword
      */
-
-    @DataBackUp(module = ModuleConstant.USER)
+    @DataBackUp(module = ModuleConstant.USER_UPDATE_PASSWORD)
     @Transactional
     @Override
     public void updatePassword(String oldPassword, String newPassword) {
@@ -261,7 +258,7 @@ public class UserServiceImpl implements UserService {
      * @param id
      * @param status
      */
-    @DataBackUp(module = ModuleConstant.USER)
+    @DataBackUp(module = ModuleConstant.USER_STATUS_CHANGE)
     @Override
     public void updateStatus(Long id, Integer status) {
         SysUser sysUser = SysUser.builder()
@@ -276,7 +273,7 @@ public class UserServiceImpl implements UserService {
      *
      * @param id
      */
-    @DataBackUp(module = ModuleConstant.USER)
+    @DataBackUp(module = ModuleConstant.USER_DELETE)
     @Override
     public void deleteUser(Long id) {
         LambdaUpdateWrapper<SysUser> wrapper = new LambdaUpdateWrapper<>();

@@ -1,6 +1,6 @@
 package com.tyut.constant;
 
-public class ExaminationContext {
+public class ExaminationConstant {
     // 检测报告类型常量（对应数据库tinyint）
     public static final Integer BLOOD_ROUTINE = 1;        // 血常规
     public static final Integer ECG = 2;                  // 心电图

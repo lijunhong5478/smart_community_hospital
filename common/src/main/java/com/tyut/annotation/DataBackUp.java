@@ -8,5 +8,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface DataBackUp {
-    ModuleConstant module() default ModuleConstant.SYSTEM;
+    ModuleConstant module();
 }

@@ -43,22 +43,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     private TriageUtil triageUtil;
     @Autowired
     private WebSocketServer webSocketServer;
-
-    /**
-     * 前端需要展示：
-     * 用户根据doctorQueryDTO中的内容查询到的doctorDetailVO
-     * doctorDetailVO中包含doctorSchedule的List
-     * 从众多医生满足条件的doctorSchedule中，患者选择一个自己方便的时段（例如 周一上午）
-     * 患者选择时段完毕后，需要定位一个精确日期
-     * 如果患者选择的星期数大于等于今日的星期数，提示患者选择的日期为本周该时段的具体日期（如2026-10-1）
-     * 如果患者选择的星期数小于今日的星期数，则提示患者选择的日期为下周该时段的具体日期（如2026-10-8）
-     * 如果患者选择的是上午的时段，可供选择的时间点为：8:30、9:00、9:30、10:00、10:30、11:00、11:30
-     * 如果患者选择的是下午的时段，可供选择的时间点为：13:00、13:30、14:00、14:30、15:00、15:30、16:00、16:30、17:00
-     * 星期数和具体日期需要完整对应，通过前段定义computed 属性，将星期数和具体日期对应起来
-     *
-     * @param dto
-     */
-    @DataBackUp(module = ModuleConstant.APPOINTMENT)
+    @DataBackUp(module = ModuleConstant.APPOINTMENT_BOOK)
     @Override
     public void saveAppointment(ExactTimeAppointmentDTO dto) {
         Appointment appointment = new Appointment();
@@ -136,7 +121,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .dataList(appointmentIPage.getRecords())
                 .build();
     }
-    @DataBackUp(module = ModuleConstant.APPOINTMENT)
+    @DataBackUp(module = ModuleConstant.APPOINTMENT_CANCEL)
     @Override
     public void cancelAppointment(Long appointmentId, String cancelReason) {
         Appointment appointment = appointmentMapper.selectById(appointmentId);
@@ -154,7 +139,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         //发送通知给医生
         sendNotification("doctor", appointment.getDoctorId(), "取消预约通知", appointment.getQueueNo());
     }
-    @DataBackUp(module = ModuleConstant.APPOINTMENT)
+    @DataBackUp(module = ModuleConstant.APPOINTMENT_CALL)
     @Override
     public void call(Long appointmentId) {
         Appointment appointment = appointmentMapper.selectById(appointmentId);
@@ -168,7 +153,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointmentMapper.updateById(appointment);
         sendNotification("resident", appointment.getResidentId(), "叫号通知", appointment.getQueueNo());
     }
-    @DataBackUp(module = ModuleConstant.APPOINTMENT)
+    @DataBackUp(module = ModuleConstant.APPOINTMENT_START)
     @Override
     public void startConsult(Long appointmentId) {
         Appointment appointment = appointmentMapper.selectById(appointmentId);
@@ -181,7 +166,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointment.setVisitStatus(VisitConstant.IN_VISIT);
         appointmentMapper.updateById(appointment);
     }
-    @DataBackUp(module = ModuleConstant.APPOINTMENT)
+    @DataBackUp(module = ModuleConstant.APPOINTMENT_SKIP)
     @Override
     public void skip(Long appointmentId) {
         Appointment appointment = appointmentMapper.selectById(appointmentId);
@@ -194,7 +179,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointmentMapper.updateById(appointment);
         sendNotification("resident", appointment.getResidentId(), "过号通知", appointment.getQueueNo());
     }
-    @DataBackUp(module = ModuleConstant.APPOINTMENT)
+    @DataBackUp(module = ModuleConstant.APPOINTMENT_FINISH)
     @Override
     public void finish(Long appointmentId) {
         Appointment appointment = appointmentMapper.selectById(appointmentId);

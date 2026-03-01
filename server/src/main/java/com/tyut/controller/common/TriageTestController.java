@@ -18,7 +18,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/api/triage-test")
-@Api(tags = "分诊功能测试接口")
+@Api(tags = "通用-分诊功能测试接口")
 public class TriageTestController {
 
     @Autowired

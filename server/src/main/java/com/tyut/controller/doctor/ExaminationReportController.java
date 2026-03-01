@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController("doctorExaminationReportController")
 @RequestMapping("/doctor/examinationReport")
-@Api(tags = "医生检查报告相关接口")
+@Api(tags = "医生-检查报告接口")
 public class ExaminationReportController {
     @Autowired
     private ExaminationReportService examinationReportService;

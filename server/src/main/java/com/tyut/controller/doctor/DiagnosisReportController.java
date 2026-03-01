@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController("doctorDiagnosisReportController")
 @RequestMapping("/doctor/diagnosisReport")
-@Api(tags="医生诊断报告接口")
+@Api(tags="医生-诊断报告接口")
 public class DiagnosisReportController {
     @Autowired
     private DiagnosisReportService diagnosisReportService;

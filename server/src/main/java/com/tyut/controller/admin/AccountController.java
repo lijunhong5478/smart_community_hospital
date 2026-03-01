@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController("adminAccountController")
 @RequestMapping("/admin/account")
-@Api(tags = "管理员账户管理接口")
+@Api(tags = "管理员-账户管理接口")
 public class AccountController {
     @Autowired
     private UserService userService;

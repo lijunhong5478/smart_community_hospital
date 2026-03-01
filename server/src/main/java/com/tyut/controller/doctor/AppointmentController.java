@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController("doctorAppointmentController")
 @RequestMapping("/doctor/appointment")
-@Api(tags = "医生预约管理接口")
+@Api(tags = "医生-预约管理接口")
 public class AppointmentController {
     @Autowired
     private AppointmentService appointmentService;

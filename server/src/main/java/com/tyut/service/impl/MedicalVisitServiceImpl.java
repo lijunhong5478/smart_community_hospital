@@ -57,16 +57,14 @@ public class MedicalVisitServiceImpl implements MedicalVisitService {
         vo.setResidentName(name);
         return vo;
     }
-
-    @DataBackUp(module = ModuleConstant.CONSULTATION)
+    @DataBackUp(module = ModuleConstant.MEDICAL_VISIT_INSERT)
     @Override
     public void save(MedicalVisit medicalVisit) {
         medicalVisit.setIsDeleted(AccountConstant.NOT_DELETE);
         medicalVisit.setCreateTime(java.time.LocalDateTime.now());
         medicalVisitMapper.insert(medicalVisit);
     }
-
-    @DataBackUp(module = ModuleConstant.CONSULTATION)
+    @DataBackUp(module = ModuleConstant.MEDICAL_VISIT_UPDATE)
     @Override
     public void update(MedicalVisit medicalVisit) {
         medicalVisitMapper.updateById(medicalVisit);

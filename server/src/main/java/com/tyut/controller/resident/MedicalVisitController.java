@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController("residentMedicalVisitController")
-@Api(tags="社区居民问诊接口")
+@Api(tags="居民-问诊接口")
 @RequestMapping("/resident/medicalVisit")
 public class MedicalVisitController {
     @Autowired

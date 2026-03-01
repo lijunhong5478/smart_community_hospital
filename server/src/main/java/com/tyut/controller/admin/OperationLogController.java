@@ -17,7 +17,7 @@ import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/admin/operationLog")
-@Api(tags="操作日志接口")
+@Api(tags="管理员-操作日志接口")
 public class OperationLogController {
     @Autowired
     private OperationLogService operationLogService;

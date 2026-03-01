@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController("residentPhysicalExamRecordController")
 @RequestMapping("/resident/physicalExamRecord")
-@Api(tags = "居民体检记录查询接口")
+@Api(tags = "居民-体检记录接口")
 public class PhysicalExamRecordController {
 
     @Autowired

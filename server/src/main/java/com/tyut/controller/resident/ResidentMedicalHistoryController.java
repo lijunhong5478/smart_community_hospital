@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController("residentResidentMedicalHistoryController")
 @RequestMapping("/resident/residentMedicalHistory")
-@Api(tags = "居民病史查询接口")
+@Api(tags = "居民-病史接口")
 public class ResidentMedicalHistoryController {
 
     @Autowired

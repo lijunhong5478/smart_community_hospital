@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController("residentExaminationReportController")
 @RequestMapping("/resident/examinationReport")
-@Api(tags="居民检查报告接口")
+@Api(tags="居民-检查报告接口")
 public class ExaminationReportController {
     @Autowired
     private ExaminationReportService examinationReportService;

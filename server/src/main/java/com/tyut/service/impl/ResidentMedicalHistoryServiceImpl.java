@@ -24,8 +24,7 @@ public class ResidentMedicalHistoryServiceImpl implements ResidentMedicalHistory
 
     @Autowired
     private ResidentMedicalHistoryMapper residentMedicalHistoryMapper;
-
-    @DataBackUp(module = ModuleConstant.HEALTH_RECORD)
+    @DataBackUp(module = ModuleConstant.MEDICAL_HISTORY_INSERT)
     @Override
     public void saveByDoctor(ResidentMedicalHistory medicalHistory) {
         // 验证当前用户是否为医生角色

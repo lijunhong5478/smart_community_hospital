@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/common/user")
-@Api(tags = "全局用户接口")
+@Api(tags = "通用-用户接口")
 public class AccountController {
     @Autowired
     private UserService userService;

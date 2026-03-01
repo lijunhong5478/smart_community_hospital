@@ -3,7 +3,6 @@ package com.tyut.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.tyut.annotation.DataBackUp;
 import com.tyut.constant.AccountConstant;
 import com.tyut.constant.ModuleConstant;
 import com.tyut.dto.AddDoctorDTO;
@@ -44,11 +43,10 @@ public class DoctorServiceImpl implements DoctorService {
      */
     @Transactional
     @Override
-    @DataBackUp(module = ModuleConstant.DOCTOR)
     public void registerDoctor(AddDoctorDTO addDoctorDTO) {
         // 对身份证号码进行加密
         String encryptedIdCard = cryptoUtil.encodeIdCard(addDoctorDTO.getIdCard());
-        
+
         SysUser sysUser = SysUser.builder()
                 .username(addDoctorDTO.getUsername())
                 .phone(addDoctorDTO.getPhone())
@@ -79,7 +77,6 @@ public class DoctorServiceImpl implements DoctorService {
         }
     }
 
-    @DataBackUp(module = ModuleConstant.DOCTOR)
     @Transactional
     @Override
     public void doctorSchedule(DoctorScheduleUpdateDTO dto) {
@@ -96,23 +93,26 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public PageResult list(DoctorQueryDTO queryDTO) {
-        // 基础分页查询（不含排班信息）
+        // 基础分页查询（含排班过滤）
         Page<DoctorDetailVO> page = new Page<>(queryDTO.getPageNum(), queryDTO.getPageSize());
         IPage<DoctorDetailVO> pageData = doctorProfileMapper.list(page, queryDTO);
 
         List<DoctorDetailVO> doctors = pageData.getRecords();
 
-        // 为每个医生单独查询排班信息
+        // 为每个医生查询详细的排班信息
         for (DoctorDetailVO doctor : doctors) {
             LambdaQueryWrapper<DoctorSchedule> scheduleWrapper = new LambdaQueryWrapper<>();
             scheduleWrapper.eq(DoctorSchedule::getDoctorId, doctor.getUserId())
-                    .eq(DoctorSchedule::getStatus, 1);//规定排班内停诊的医生不显示
-            if (queryDTO.getWeekDay() != null) {
-                scheduleWrapper.eq(DoctorSchedule::getWeekDay, queryDTO.getWeekDay());
+                    .eq(DoctorSchedule::getStatus, 1);
+
+            if (queryDTO.getWorkDay() != null) {
+                Integer weekDay = queryDTO.getWorkDay().getDayOfWeek().getValue();
+                scheduleWrapper.eq(DoctorSchedule::getWeekDay, weekDay);
             }
             if (queryDTO.getTimeSlot() != null) {
                 scheduleWrapper.eq(DoctorSchedule::getTimeSlot, queryDTO.getTimeSlot());
             }
+
             List<DoctorSchedule> schedules = doctorScheduleMapper.selectList(scheduleWrapper);
             doctor.setDoctorSchedules(schedules);
         }
@@ -122,6 +122,5 @@ public class DoctorServiceImpl implements DoctorService {
                 .dataList(doctors)
                 .build();
     }
-
 
 }

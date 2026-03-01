@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController("doctorHealthRecordController")
 @RequestMapping("/doctor/healthRecord")
-@Api(tags = "医生健康档案相关接口")
+@Api(tags = "医生-健康档案接口")
 public class HealthRecordController {
     @Autowired
     private HealthRecordService healthRecordService;

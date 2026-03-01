@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 public class OperationLogAspect {
     @Autowired
     private OperationLogMapper operationLogMapper;
-    @Pointcut("execution(* *(..)) && @annotation(com.tyut.annotation.DataBackUp)")
+    @Pointcut("execution(* com.tyut.service..*.*(..)) && @annotation(com.tyut.annotation.DataBackUp)")
     public void dataBackUpPointcut() {
     }
     /**

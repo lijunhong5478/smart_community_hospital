@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController("residentAppointmentController")
 @RequestMapping("/resident/appointment")
-@Api(tags="社区居民预约管理接口")
+@Api(tags="居民-预约接口")
 public class AppointmentController {
     @Autowired
     private AppointmentService appointmentService;
